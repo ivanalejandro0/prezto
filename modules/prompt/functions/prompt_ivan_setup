@@ -1,0 +1,73 @@
+#
+# A theme inspired on sorin and steeef prompts.
+#
+# Authors:
+#   Ivan Alejandro <ivanalejandro0@gmail.com>
+#
+# Screenshots:
+#   TODO: add imgur screenshot
+#
+
+# Load dependencies
+pmodload 'helper'  # needed for 'coalesce' function
+
+function prompt_ivan_precmd {
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info
+  fi
+
+  # Get python information.
+  if (( $+functions[python-info] )); then
+    python-info
+  fi
+}
+
+function prompt_ivan_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent subst)
+
+  # Load required functions.
+  autoload -Uz add-zsh-hook
+
+  # Add hook to gather the required info before each command
+  add-zsh-hook precmd prompt_ivan_precmd
+
+  # TODO: use alternative colors for consoles that don't support extended color palette.
+  # NOTE: this next block is not used yet...
+  if [[ $TERM = *256color* || $TERM = *rxvt* ]]; then
+    _prompt_ivan_colors=(
+      "%F{26}"  # Blue, kind of similar to the python logo
+      "%F{202}" # hex: #FF5F00, similar to git logo's hex: #F54D27 (http://git-scm.com)
+    )
+  else
+    _prompt_ivan_colors=(
+      "%F{blue}"
+      "%F{yellow}"
+    )
+  fi
+
+  # Set git-info parameters
+  zstyle ':prezto:module:git:info' verbose 'yes'
+  zstyle ':prezto:module:git:info:clean' format '%B%F{green} ✔%f%b'
+  zstyle ':prezto:module:git:info:dirty' format '%B%F{red} ✘%f%b'
+  zstyle ':prezto:module:git:info:branch' format '%F{green}%b%f'
+  zstyle ':prezto:module:git:info:commit' format '%F{green}%.7c%f'
+  zstyle ':prezto:module:git:info:position' format '%F{red}%p%f'
+  # zstyle ':prezto:module:git:info:keys' format 'prompt' '(%F{202}git%f:$(coalesce "%b" "%p" "%c")%C%D) '
+  zstyle ':prezto:module:git:info:keys' format 'prompt' '(git:$(coalesce "%b" "%p" "%c")%C%D) '
+
+  # Set python-info parameters
+  # zstyle ':prezto:module:python:info:virtualenv' format '(%F{26}venv%f:%v) '
+  zstyle ':prezto:module:python:info:virtualenv' format '(venv:%F{26}%v%f) '
+
+  # Define prompts
+  # PROMPT='%F{magenta}%n%f in [%F{cyan}%~%f]$prompt_newline'
+  PROMPT='%F{magenta}%n%f in [%F{cyan}${PWD/#$HOME/~}%f]$prompt_newline'
+  PROMPT+='$python_info[virtualenv]${git_info:+${(e)git_info[prompt]}}%B%F{white}➜%f%b '
+  RPROMPT=''
+  PS2='%B%F{white}❱%f%b '  # continuation line for 'PROMPT'
+}
+
+prompt_ivan_setup "$@"
