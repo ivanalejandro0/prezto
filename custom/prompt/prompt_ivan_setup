@@ -1,0 +1,209 @@
+#
+# A theme inspired on sorin and steeef prompts.
+#
+# Authors:
+#   Ivan Alejandro <ivanalejandro0@gmail.com>
+#
+# Screenshots:
+#   TODO: add imgur screenshot
+#
+
+# TODO: add doc about psvars, like
+# https://github.com/agkozak/agkozak-zsh-prompt/blob/master/agkozak-zsh-prompt.plugin.zsh#L37
+
+# TODO: maybe unfunction exported functions of this file
+# check how other prompts prevent global namespace pollution
+
+# Load dependencies
+pmodload 'helper'  # needed for 'coalesce' function
+
+# Script variables
+# holds the timer since the command was executed
+_prompt_ivan_timer=""
+# here we store the formatted elapsed time, for RPROMPT
+# _prompt_ivan_timeprompt=""
+# note: maybe use $psvar ?
+
+function prompt_ivan_preexec() {
+  _prompt_ivan_timer=$(print -P %D{%s%3.})
+}
+
+# from https://gist.github.com/knadh/123bca5cfdae8645db750bfb49cb44b0?permalink_comment_id=4502423#gistcomment-4502423
+function _prompt_ivan_format_time() {
+    # TODO: check decimal rounding
+    local time_in_ms=$1
+
+    local d_s=$((time_in_ms / 1000))
+    local ms=$((time_in_ms % 1000))
+    local s=$((d_s % 60))
+    local m=$(((d_s / 60) % 60))
+    local h=$((d_s / 3600))
+
+    local timeprompt=""
+
+    if   ((h > 0)); then timeprompt=${h}h${m}m${s}s  # 1h23m45s
+    elif ((m > 0)); then timeprompt=${m}m${s}.$(printf $(($ms / 100)))s  # 1m12.3s
+    elif ((s > 9)); then timeprompt=${s}.$(printf %02d $(($ms / 10)))s  # 12.34s
+    elif ((s > 0)); then timeprompt=${s}.$(printf %03d $ms)s  # 1.234s
+    else timeprompt=${ms}ms  # 234ms
+    fi
+
+    echo "$timeprompt"
+}
+
+# optional signal name for some exit codes
+function _exit_code_name {
+  local exitstatus=$1
+  [[ $exitstatus == 0 ]] && return
+  [[ $exitstatus -lt 128 ]] && return;
+  echo " (SIG$signals[$exitstatus-127])"
+}
+
+# optional signal name for some exit codes
+function prompt_ivan_exit_code {
+  local exitstatus=$?
+  psvar[12]=""
+  [[ $exitstatus -eq 0 ]] && return
+  local signal=$(_exit_code_name $exitstatus)
+  psvar[12]="[exit code: ${exitstatus}${signal}]"
+}
+
+
+# get execution time from last command
+function prompt_ivan_timer {
+  psvar[11]=""
+  if [ $_prompt_ivan_timer ]; then
+    local now=$(print -P %D{%s%3.})
+    local time_in_ms=$(($now - $_prompt_ivan_timer))
+    psvar[11]=$(_prompt_ivan_format_time "$time_in_ms")
+    unset _prompt_ivan_timer
+  fi
+}
+
+function prompt_ivan_precmd {
+  # Get Git repository information.
+  if (( $+functions[git-info] )); then
+    git-info
+  fi
+
+  # Get python information.
+  if (( $+functions[python-info] )); then
+    python-info
+  fi
+
+  # # Get execution time from last command
+  # _prompt_ivan_timeprompt=""
+  # if [ $_prompt_ivan_timer ]; then
+  #   local now=$(print -P %D{%s%3.})
+  #   local time_in_ms=$(($now - $_prompt_ivan_timer))
+  #   _prompt_ivan_timeprompt=$(_prompt_ivan_format_time "$time_in_ms")
+  #   unset _prompt_ivan_timer
+  # fi
+
+}
+
+function prompt_ivan_setup {
+  setopt LOCAL_OPTIONS
+  unsetopt XTRACE KSH_ARRAYS
+  prompt_opts=(cr percent subst)
+
+  # Load required functions.
+  autoload -Uz add-zsh-hook
+
+  # Add hook to gather the required info before each command
+  add-zsh-hook precmd prompt_ivan_exit_code
+  add-zsh-hook precmd prompt_ivan_precmd
+  add-zsh-hook precmd prompt_ivan_timer
+  add-zsh-hook preexec prompt_ivan_preexec
+
+  # see other status and icons on https://starship.rs/config/#git-status
+  # https://github.com/ohmyzsh/ohmyzsh/blob/master/themes/jonathan.zsh-theme#L53
+  # https://www.amp-what.com/
+
+  # Set git-info parameters
+  zstyle ':prezto:module:git:info' verbose 'yes'
+  zstyle ':prezto:module:git:info:clean' format '%B%F{green} ✓%f%b'
+  # zstyle ':prezto:module:git:info:clean' format '%B%F{green} ✔ %f%b'
+  zstyle ':prezto:module:git:info:dirty' format '%B%F{red} ✗%f%b'
+  # zstyle ':prezto:module:git:info:dirty' format '%B%K{red} ✗ %k%b'
+  # zstyle ':prezto:module:git:info:dirty' format '%B%F{red} ✘%f%b'
+  # zstyle ':prezto:module:git:info:dirty' format '%B%F{yellow} ✗%f%b  %B%F{226} ✗%f%b %B%F{red} ✗%f%b '
+  # zstyle ':prezto:module:git:info:dirty' format '%B%F{yellow}•%f%b%B%F{226}•%f%b%B%F{red}•%f%b '
+  # zstyle ':prezto:module:git:info:dirty' format ' %B%F{yellow}%f%b%B%F{226}%f%b%B%F{red}%f%b '
+  # ball and colors from https://github.com/ohmyzsh/ohmyzsh/blob/master/themes/half-life.zsh-theme#L10
+  # zstyle ':prezto:module:git:info:dirty' format '%B%F{yellow} ●%f%F{118} ●%f%F{226} ●%f%F{red} ●%f%b '
+
+  zstyle ':prezto:module:git:info:behind' format '%F{220} %B↓%f'
+  zstyle ':prezto:module:git:info:ahead' format '%F{cyan} %A↑%f'
+  # zstyle ':prezto:module:git:info:behind' format '%F{226} %B▾ %B▼ %B🠟 %B↓%f'
+  # zstyle ':prezto:module:git:info:ahead' format '%F{cyan} %A▴ %A▲ %A🠝 %A↑%f'
+
+  zstyle ':prezto:module:git:info:branch' format '%F{green}%b%f'
+  zstyle ':prezto:module:git:info:commit' format '%F{green}%.7c%f'
+  zstyle ':prezto:module:git:info:position' format '%F{red}%p%f'
+  # zstyle ':prezto:module:git:info:keys' format 'prompt' '(%F{202}git%f:$(coalesce "%b" "%p" "%c")%C%D) '
+  # zstyle ':prezto:module:git:info:keys' format 'prompt' '(git:$(coalesce "%b" "%p" "%c")%C%D%A%B) '
+
+  # add styles, bold and green/red/yellow
+  zstyle ':prezto:module:git:info:added' format "+"
+  zstyle ':prezto:module:git:info:deleted' format "-"
+  zstyle ':prezto:module:git:info:modified' format "*"
+  zstyle ':prezto:module:git:info:untracked' format "?"
+  zstyle ':prezto:module:git:info:keys' format 'prompt' '(git:$(coalesce "%b" "%p" "%c")%C%D%A%B$(test "%d%a%m%u" && echo " %F{yellow}[%d%a%m%u]%f")) '
+
+  # zstyle ':prezto:module:git:info:keys' format \
+  #   'prompt' '$(coalesce "%b" "%p" "%c")%C%D%A%B' \
+  #   'status' '%d%a%m%uf'
+
+  # from paradox prompt
+  # zstyle ':prezto:module:git:info:keys' format \
+  #   'ref' '$(coalesce "%b" "%p" "%c")' \
+  #   'status' '%s%D%A%B%S%a%d%m%r%U%u'
+  # prompt_paradox_start_segment green black '${(e)git_info[ref]}${(e)git_info[status]}'
+
+  # Set python-info parameters
+  zstyle ':prezto:module:python:info:virtualenv' format '(venv:%F{26}%v%f) '
+
+  # Define prompts
+  # PROMPT='%F{magenta}%n%f in [%F{cyan}%~%f]$prompt_newline'
+  # PROMPT='[%F{cyan}${PWD/#$HOME/~}%f]'
+  # PROMPT='[%F{cyan}%~%f]'
+  PROMPT='%F{magenta}%n%f in [%F{cyan}${PWD/#$HOME/~}%f]'
+  PROMPT+='$prompt_newline'
+  PROMPT+='$python_info[virtualenv]'
+  PROMPT+='${git_info:+${(e)git_info[prompt]}}'
+  PROMPT+='%B%F{white}➜%f%b '
+  PS2='%B%F{white}❱%f%b '  # continuation line for 'PROMPT'
+
+  # required to align RPROMPT text to the first line of PROMPT, because it has
+  # two lines and if not changed it'll align with 2nd line
+  # from https://superuser.com/a/737454
+  _lineup=$'\e[1A'
+  _linedown=$'\e[1B'
+  # RPROMPT='%{${_lineup}%}%(?..[%F{red}!%fexit code: %?] )${_prompt_ivan_timeprompt}%{${_linedown}%}'
+  RPROMPT='%{${_lineup}%}'
+  # RPROMPT+='%(?..[%F{red}!%fexit code: %?])'
+  # RPROMPT+='%(?..[exit code: %?%12v])'
+  RPROMPT+='%12v'
+
+  # add a space to join exit code and elapsed time, only if both have value
+  # RPROMPT+='${_prompt_ivan_timeprompt:+${?:+ }}'
+  # RPROMPT+='${%11v:+${?:+ }}'
+  # https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html#Conditional-Substrings-in-Prompts
+  # RPROMPT+='%(?..%(11v. .))'
+  RPROMPT+='%(12V.%(11V. .).)'
+
+  RPROMPT+='%11v'
+  RPROMPT+='%{${_linedown}%}'
+  # NOTE: check for text hiding when PROMPT text covers it
+  # with this line up/down workaround it doesn't seem to hide properly,
+  # without it, the workaround works well
+
+  # other prompts
+  # PROMPT_EOL_MARK='%K{red} %k'
+  # SPROMPT='zsh: correct %F{red}%R%f to %F{green}%r%f [nyae]? '
+}
+
+prompt_ivan_setup "$@"
+
+# vim: ft=zsh

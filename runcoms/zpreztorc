@@ -26,6 +26,7 @@ zstyle ':prezto:*:*' color 'yes'
 
 # Set the Zsh functions to load (man zshcontrib).
 # zstyle ':prezto:load' zfunction 'zargs' 'zmv'
+zstyle ':prezto:load' zfunction 'zmv'
 
 # Set the Prezto modules to load (browse modules).
 # The order matters.
@@ -37,9 +38,13 @@ zstyle ':prezto:load' pmodule \
   'directory' \
   'spectrum' \
   'utility' \
+  'archive' \
+  'git' \
+  'python' \
   'completion' \
-  'history-substring-search' \
-  'prompt'
+  'syntax-highlighting' \
+  'history-substring-search'
+  # 'prompt' # I'm using my custom prompt module
 
 #
 # Autosuggestions
@@ -75,6 +80,7 @@ zstyle ':prezto:module:editor' key-bindings 'emacs'
 
 # Ignore submodules when they are 'dirty', 'untracked', 'all', or 'none'.
 # zstyle ':prezto:module:git:status:ignore' submodules 'all'
+zstyle ':prezto:module:git:alias' skip 'yes'
 
 #
 # GNU Utility
@@ -142,7 +148,8 @@ zstyle ':prezto:module:editor' key-bindings 'emacs'
 # Set the prompt theme to load.
 # Setting it to 'random' loads a random theme.
 # Auto set to 'off' on dumb terminals.
-zstyle ':prezto:module:prompt' theme 'sorin'
+# zstyle ':prezto:module:prompt' theme 'sorin'
+# zstyle ':prezto:module:prompt' theme 'ivan'
 
 # Set the working directory prompt display length.
 # By default, it is set to 'short'. Set it to 'long' (without '~' expansion)
