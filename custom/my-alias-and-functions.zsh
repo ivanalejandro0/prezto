@@ -5,8 +5,8 @@ psg() {
 # finame() { find . -iname "*$1*"; }  # no longer needed, I use fd now
 mkcd() { mkdir ${1}; cd ${1}  }
 
-alias pingo="ping www.google.com"
-alias shred="shred -fuvz"
+alias pingo="ping -4 www.google.com"
+# alias shred="shred -fuvz"
 alias serve.py="python3 -m http.server"
 alias tmux="tmux -2"
 
