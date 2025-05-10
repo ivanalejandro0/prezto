@@ -34,6 +34,7 @@ CUSTOMIZATIONS_PATH="${ZDOTDIR:-$HOME}/.zprezto/custom/"
 # TODO: maybe load everything on this path instead of listing them one by one?
 source "${CUSTOMIZATIONS_PATH}/apt.zsh"
 source "${CUSTOMIZATIONS_PATH}/bun.zsh"
+source "${CUSTOMIZATIONS_PATH}/deno.zsh"
 source "${CUSTOMIZATIONS_PATH}/fnm.zsh"
 source "${CUSTOMIZATIONS_PATH}/fzf.zsh"
 source "${CUSTOMIZATIONS_PATH}/git.zsh"
