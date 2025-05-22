@@ -13,6 +13,12 @@ export VISUAL=`which nvim`
 # vim/tmux/osx tweak (for Ctrl+h to work)
 export TERMINFO="$HOME/.terminfo"
 
+# fix to get back color to man pages
+# see:
+# https://github.com/jedsoft/most/issues/9#issuecomment-2558517596
+# https://bbs.archlinux.org/viewtopic.php?id=287185
+export MANROFFOPT=-c
+
 # Note: function accessible globally
 pathadd() {
   # Add parameter to PATH only if it exists and if it's not already added
