@@ -10,6 +10,14 @@ alias pingo="ping -4 www.google.com"
 alias serve.py="python3 -m http.server"
 alias tmux="tmux -2"
 
+mdf() {
+  # custo df, only shows /, logs results to file
+  local LOG_FILE="$HOME/df.log"
+  touch $LOG_FILE
+  date --iso-8601=seconds >> $LOG_FILE
+  df -h / | tee --append $LOG_FILE
+  echo >> $LOG_FILE
+}
 
 if hash gls 2>/dev/null; then
     # GNU coreutils alias for OSX
