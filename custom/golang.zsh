@@ -1,5 +1,5 @@
 # # Install / update go on custom path
-# default install (pkg file) puts go on /usr/loca/go/
+# default install (pkg file) puts go on /usr/local/go/
 
 BASE=$HOME/golang
 
@@ -8,8 +8,9 @@ BASE=$HOME/golang
 #     mkdir -p $BASE
 #     cd $BASE
 #
-#     go_version="1.16.5"
-#     go_tarball="go${go_version}.darwin-amd64.tar.gz"
+#     go_version="1.25.5"
+#     # go_tarball="go${go_version}.darwin-amd64.tar.gz"
+#     go_tarball="go${go_version}.linux-amd64.tar.gz"
 #     curl --remote-name https://dl.google.com/go/${go_tarball}
 #     [[ -d go.old ]] && rm -fr go.old
 #     [[ -d go ]] && mv go go.old
