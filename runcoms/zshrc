@@ -5,6 +5,13 @@
 #   Sorin Ionescu <sorin.ionescu@gmail.com>
 #
 
+# idea from https://gist.github.com/elalemanyo/cb3395af64ac23df2e0c3ded8bd63b2f?permalink_comment_id=4991583#gistcomment-4991583
+# run it like so:
+# time ZSH_DEBUGRC=1 zsh -i -c exit
+if [[ -n "$ZSH_DEBUGRC" ]]; then
+  zmodload zsh/zprof
+fi
+
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
@@ -14,3 +21,11 @@ fi
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/custom/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/custom/init.zsh"
 fi
+
+if [[ -n "$ZSH_DEBUGRC" ]]; then
+  zprof
+fi
+
+function zsh_zprof() {
+  time ZSH_DEBUGRC=1 zsh -i -c exit
+}
