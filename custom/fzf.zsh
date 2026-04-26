@@ -14,4 +14,6 @@ fi
 #     export FZF_DEFAULT_COMMAND='rg --files --no-ignore --hidden --follow --glob "!.git/*"'
 # fi
 
+# if installed with `brew install fzf`, the shell integration file needs to be
+# created manually, like so: fzf --zsh > .fzf.zsh
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
