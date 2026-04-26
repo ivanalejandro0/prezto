@@ -34,13 +34,18 @@ now() {
   LC_ALL=es_AR.UTF-8 date +"%A, %d de %B de %Y - %I:%M %p"
 }
 
-if hash gls 2>/dev/null; then
-    # GNU coreutils alias for OSX
-    # `brew install coreutils`
+if [[ "$OSTYPE" == linux* ]]; then
+  alias ls="ls --group-directories-first --color=always -F -b"
+elif [[ "$OSTYPE" == darwin* ]]; then
+  # default mac `ls` doesn't have `--group-directories-first`
+  alias ls="ls --color=always -F -b"
+
+  if hash gls 2>/dev/null; then
+    # if GNU coreutils is available use it
+    # installed on mac with `brew install coreutils`
     alias ls="gls --group-directories-first --color=always -F -b"
     alias df="gdf"
-else
-    alias ls="ls --group-directories-first --color=always -F -b"
+  fi
 fi
 
 # For date/string formatting options see:
