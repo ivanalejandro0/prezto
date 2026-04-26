@@ -11,12 +11,17 @@ alias serve.py="python3 -m http.server"
 alias tmux="tmux -2"
 
 mdf() {
-  # custo df, only shows /, logs results to file
+  # custom (my)df, only shows /, logs results to file
   local LOG_FILE="$HOME/df.log"
   touch $LOG_FILE
   date --iso-8601=seconds >> $LOG_FILE
   df -h / | tee --append $LOG_FILE
   echo >> $LOG_FILE
+}
+
+now() {
+  # custom date+time function, localized for Argentina
+  LC_ALL=es_AR.UTF-8 date +"%A, %d de %B de %Y - %I:%M %p"
 }
 
 if hash gls 2>/dev/null; then
