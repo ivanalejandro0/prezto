@@ -33,6 +33,9 @@ pathadd() {
 # throw binaries on this folder to be accessible anywhere
 pathadd "$HOME/apps/bin"
 
+# default on many systems, or added by installers like uv
+pathadd "$HOME/.local/bin"
+
 # export PATH="$PATH:$HOME/.local/bin"  # Default on system
 
 CUSTOMIZATIONS_PATH="${ZDOTDIR:-$HOME}/.zprezto/custom/"
@@ -49,6 +52,7 @@ source "${CUSTOMIZATIONS_PATH}/openjdk-mac.zsh"
 source "${CUSTOMIZATIONS_PATH}/pnpm.zsh"
 source "${CUSTOMIZATIONS_PATH}/prompt/init.zsh"
 source "${CUSTOMIZATIONS_PATH}/rust.zsh"
+# source "${CUSTOMIZATIONS_PATH}/uv.zsh"  # commented out because it slows down the startup
 source "${CUSTOMIZATIONS_PATH}/yarn.zsh"
 source "${CUSTOMIZATIONS_PATH}/zoxide.zsh"
 
