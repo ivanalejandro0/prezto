@@ -5,8 +5,18 @@ psg() {
 # finame() { find . -iname "*$1*"; }  # no longer needed, I use fd now
 mkcd() { mkdir ${1}; cd ${1}  }
 
-alias pingo="ping -4 www.google.com"
-# alias shred="shred -fuvz"
+# alias pingo="ping -4 www.google.com"
+pingo() {
+  if [[ "$OSTYPE" == darwin* ]]; then
+    # on mac, `ping` defaults to ipv4
+    ping www.google.com
+    return
+  fi
+
+  # on some cases, linux defaults to ipv6, use ipv4 explicitly
+  ping -4 www.google.com
+}
+
 alias serve.py="python3 -m http.server"
 alias tmux="tmux -2"
 
