@@ -16,9 +16,20 @@ alias gcb="git symbolic-ref --short HEAD"
 alias gcu='git rev-parse --abbrev-ref --symbolic-full-name "@{u}"'
 
 function gl() {
-    # format from from https://github.com/sorin-ionescu/prezto/blob/master/modules/git/alias.zsh
-    local _git_log_medium_format='%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n%+B'
-    git log --topo-order --pretty=format:"${_git_log_medium_format}" $@
+    # format from _git_log_medium_format
+    # from: https://github.com/sorin-ionescu/prezto/blob/master/modules/git/alias.zsh
+
+    # For reference see the "PRETTY FORMATS" section on `man git-log`
+    local format_string=(
+      '%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n'
+      '%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n'
+      '%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n'
+      '%+B'
+    )
+    format_string="${(j::)format_string[*]}"  # array to string, join without separator (default is " ")
+    # format_string="${(j:%n:)format_string[*]}"  # %n could be used to join instead of adding it to each string on the array
+
+    git log --topo-order --pretty=format:"${format_string}" $@
 }
 
 function gt() {
