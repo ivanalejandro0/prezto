@@ -16,6 +16,7 @@
 
 # Load dependencies
 pmodload 'helper'  # needed for 'coalesce' function
+zmodload zsh/datetime  # needed for EPOCHREALTIME
 
 # Script variables
 # holds the timer since the command was executed
@@ -25,7 +26,7 @@ _prompt_ivan_timer=""
 # note: maybe use $psvar ?
 
 function prompt_ivan_preexec() {
-  _prompt_ivan_timer=$(print -P %D{%s%3.})
+  _prompt_ivan_timer=$EPOCHREALTIME
 }
 
 # from https://gist.github.com/knadh/123bca5cfdae8645db750bfb49cb44b0?permalink_comment_id=4502423#gistcomment-4502423
@@ -72,10 +73,10 @@ function prompt_ivan_exit_code {
 # get execution time from last command
 function prompt_ivan_timer {
   psvar[11]=""
-  if [ $_prompt_ivan_timer ]; then
-    local now=$(print -P %D{%s%3.})
-    local time_in_ms=$(($now - $_prompt_ivan_timer))
-    psvar[11]=$(_prompt_ivan_format_time "$time_in_ms")
+  if [[ -n $_prompt_ivan_timer ]]; then
+    # local -i makes elapsed_ms an integer automatically, truncating the float.
+    local -i elapsed_ms=$(( (EPOCHREALTIME - _prompt_ivan_timer) * 1000 ))
+    psvar[11]=$(_prompt_ivan_format_time $elapsed_ms)
     unset _prompt_ivan_timer
   fi
 }
