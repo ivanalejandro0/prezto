@@ -32,6 +32,24 @@ function gl() {
     git log --topo-order --pretty=format:"${format_string}" $@
 }
 
+function gl2() {
+  # Basically a colorized: git log --format=fuller
+
+  # For reference see the "PRETTY FORMATS" section on `man git-log`
+  local format_string=(
+    '%C(bold)Commit:%C(reset)         %C(green)%H%C(auto)%d%n'
+    '%C(bold)Author:%C(reset)         %C(cyan)%an <%ae>%n'
+    '%C(bold)Author Date:%C(reset)    %C(blue)%ai (%ar)%C(reset)%n'
+    '%C(bold)Committer:%C(reset)      %C(cyan)%cn <%ce>%n'
+    '%C(bold)Committer Date:%C(reset) %C(blue)%ci (%cr)%C(reset)%n'
+    '%+B'
+  )
+  format_string="${(j::)format_string[*]}"  # array to string, join without separator (default is " ")
+  # format_string="${(j:%n:)format_string[*]}"  # %n could be used to join instead of adding it to each string on the array
+
+  git log --topo-order --pretty=format:"${format_string}" $@
+}
+
 function gt() {
     # List tags sorted by create date
     # from: https://stackoverflow.com/a/6270112
