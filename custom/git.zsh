@@ -21,7 +21,7 @@ function gl() {
 
     # For reference see the "PRETTY FORMATS" section on `man git-log`
     local format_string=(
-      '%C(bold)Commit:%C(reset) %C(green)%H%C(red)%d%n'
+      '%C(bold)Commit:%C(reset) %C(green)%H%C(auto)%d%n'
       '%C(bold)Author:%C(reset) %C(cyan)%an <%ae>%n'
       '%C(bold)Date:%C(reset)   %C(blue)%ai (%ar)%C(reset)%n'
       '%+B'
