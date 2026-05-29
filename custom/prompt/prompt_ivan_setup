@@ -30,6 +30,7 @@ function prompt_ivan_preexec() {
 }
 
 # from https://gist.github.com/knadh/123bca5cfdae8645db750bfb49cb44b0?permalink_comment_id=4502423#gistcomment-4502423
+# TODO: replace this for the ./format_time.zsh function, extracted to add test suite
 function _prompt_ivan_format_time() {
     # TODO: check decimal rounding
     local time_in_ms=$1
