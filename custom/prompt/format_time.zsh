@@ -11,10 +11,14 @@ function _prompt_ivan_format_time() {
     print -r -- "${h}h${m}m${s}s"
 
   elif (( m > 0 )); then
-    print -r -- "${m}m${s}.$(( ms / 100 ))s"
+    local frac=""
+    (( ms > 0 )) && frac=".$(( ms / 100 ))"
+    print -r -- "${m}m${s}${frac}s"
 
   elif (( s > 9 )); then
-    print -r -- "${s}.$(( ms / 10 ))s"
+    local frac=""
+    (( ms > 0 )) && frac=".$(( ms / 10 ))"
+    print -r -- "${s}${frac}s"
 
   elif (( s > 0 )); then
     print -r -- "${s}.${(l:3::0:)ms}s"

@@ -2,6 +2,9 @@
 
 source ./format_time.zsh
 
+cc_reset="$(tput sgr0)"
+cc_reverse="$(tput rev)"
+
 function test_format() {
   local input="$1"
   local expected="$2"
@@ -10,12 +13,13 @@ function test_format() {
   if [[ "$result" == "$expected" ]]; then
     echo "PASS: input = $input; formatted = $result"
   else
-    echo "FAIL: input = $input; formatted = $result; expected = $expected; "
+    echo "${cc_reverse}FAIL${cc_reset}: input = $input; formatted = $result; expected = $expected; "
     return 1
   fi
 }
 
 test_cases=(
+  '12000' '12s'
   '12345' '12.34s'
   '754000' '12m34s'
   '5025000' '1h23m45s'
