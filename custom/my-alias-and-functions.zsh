@@ -31,7 +31,9 @@ mdf() {
 
 now() {
   # custom date+time function, localized for Argentina
-  LC_ALL=es_AR.UTF-8 date +"%A, %d de %B de %Y - %I:%M %p"
+  # LC_ALL=es_AR.UTF-8 date +"%A, %d de %B de %Y - %I:%M %p"  # The "%p" is empty due to some problem with the combination of "%" parameters
+  # LC_ALL=es_AR.UTF-8 date +"%p"  # is empty for some reason
+  LC_ALL=es_AR.UTF-8 date +"%A, %d de %B de %Y - %I:%M $(date +%P)"
 }
 
 if [[ "$OSTYPE" == linux* ]]; then
