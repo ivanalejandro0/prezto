@@ -5,7 +5,7 @@ source ./format_time.zsh
 function test_format() {
   local input="$1"
   local expected="$2"
-  local result=$(format_time "$input")
+  local result=$(_prompt_ivan_format_time "$input")
 
   if [[ "$result" == "$expected" ]]; then
     echo "PASS: input = $input; formatted = $result"
@@ -23,6 +23,7 @@ test_cases=(
   '12340' '12.34s'
   '1234' '1.234s'
   '234' '234ms'
+  '42' '42ms'
 )
 
 for key val in ${(kv)test_cases}; do
