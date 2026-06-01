@@ -56,6 +56,7 @@ source "${CUSTOMIZATIONS_PATH}/rust.zsh"
 source "${CUSTOMIZATIONS_PATH}/yarn.zsh"
 source "${CUSTOMIZATIONS_PATH}/zoxide.zsh"
 
+source "${CUSTOMIZATIONS_PATH}/coreutils-mac.zsh"
 source "${CUSTOMIZATIONS_PATH}/my-alias-and-functions.zsh"
 
 # private settings, excluded from git
