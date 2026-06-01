@@ -44,10 +44,9 @@ elif [[ "$OSTYPE" == darwin* ]]; then
   alias ls="ls --color=always -F -b"
 
   if hash gls 2>/dev/null; then
-    # if GNU coreutils is available use it
+    # if ls from GNU coreutils is available use it
     # installed on mac with `brew install coreutils`
     alias ls="gls --group-directories-first --color=always -F -b"
-    alias df="gdf"
   fi
 fi
 
