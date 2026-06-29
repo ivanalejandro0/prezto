@@ -3,7 +3,12 @@ psg() {
 }
 
 # finame() { find . -iname "*$1*"; }  # no longer needed, I use fd now
-mkcd() { mkdir ${1}; cd ${1}  }
+
+# Makes a directory and changes to it.
+function mkcd() {
+  [[ -n "$1" ]] && mkdir -p "$1" && cd "$1"
+}
+
 
 # alias pingo="ping -4 www.google.com"
 pingo() {
