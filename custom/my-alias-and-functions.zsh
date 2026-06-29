@@ -30,7 +30,7 @@ mdf() {
   local LOG_FILE="$HOME/df.log"
   touch $LOG_FILE
   date --iso-8601=seconds >> $LOG_FILE
-  df -h / | tee --append $LOG_FILE
+  df -h / | tee -a $LOG_FILE
   echo >> $LOG_FILE
 }
 
