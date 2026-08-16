@@ -1,5 +1,6 @@
 DENO_BIN=$HOME/.deno/bin
 
-if [[ -d $DENO_BIN ]]; then
-    pathadd $DENO_BIN
-fi
+pathadd "$DENO_BIN"
+
+# zsh completion added by deno installer
+fpathadd "/home/ivan/.zsh/completions"

@@ -19,14 +19,32 @@ export TERMINFO="$HOME/.terminfo"
 # https://bbs.archlinux.org/viewtopic.php?id=287185
 export MANROFFOPT=-c
 
+# if [[ ${(t)path} =~ "unique" ]]; then
+#   # Uniqueness check not needed when `typeset -gU path`
+#   typeset -gU path
+# fi
+#
+# if [[ ${(t)fpath} =~ "unique" ]]; then
+#   # Uniqueness check not needed when `typeset -gU path`
+#   typeset -gU fpath
+# fi
+
+# Ensure path arrays do not contain duplicates.
+typeset -gU fpath path
+
 # Note: function accessible globally
+# Prepend $1 to the $path array, if $1 exists
 pathadd() {
-  # Add parameter to PATH only if it exists and if it's not already added
-  # When running zsh -> tmux -> zsh some paths gets added twice if we just
-  # export PATH="$1:$PATH"
-  # from: https://superuser.com/a/39995
-  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
-    PATH="${PATH:+"$PATH:"}$1"
+  if [[ -d "$1" ]]; then
+    path=($1 $path)
+  fi
+}
+
+# Note: function accessible globally
+# Prepend $1 to the $fpath array, if $1 exists
+fpathadd() {
+  if [[ -d "$1" ]]; then
+    fpath=($1 $fpath)
   fi
 }
 
