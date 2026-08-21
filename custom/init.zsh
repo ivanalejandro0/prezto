@@ -69,6 +69,7 @@ source "${CUSTOMIZATIONS_PATH}/golang.zsh"
 source "${CUSTOMIZATIONS_PATH}/openjdk-mac.zsh"
 source "${CUSTOMIZATIONS_PATH}/pnpm.zsh"
 source "${CUSTOMIZATIONS_PATH}/prompt/init.zsh"
+# PROMPT='%B%F{white}➜%f%b '  # simplest prompt, kept for testing
 source "${CUSTOMIZATIONS_PATH}/rust.zsh"
 # source "${CUSTOMIZATIONS_PATH}/uv.zsh"  # commented out because it slows down the startup
 source "${CUSTOMIZATIONS_PATH}/yarn.zsh"
